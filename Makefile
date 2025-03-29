@@ -1,6 +1,6 @@
 install:
 	composer install
-	touch .env 
+	cp .env.example .env
 	php artisan key:gen --ansi
 	php artisan migrate
 	npm ci
