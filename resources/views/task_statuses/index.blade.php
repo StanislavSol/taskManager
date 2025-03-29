@@ -41,7 +41,7 @@
                href="{{route('task_statuses.destroy', ['task_status'=>$status->id])}}"
                rel="nofollow">
             Удалить                        </a>
-            <a class="text-blue-600 hover:text-blue-900" href="task_statuses/{{ $status->id }}/edit">
+            <a class="text-blue-600 hover:text-blue-900" href="{{route('task_statuses.edit', ['task_status'=>$status->id])}}">
                 Изменить                        </a>
             </td>
             @endauth
