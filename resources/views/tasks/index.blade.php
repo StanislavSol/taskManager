@@ -6,11 +6,11 @@
              role="alert">
              @include('flash::message')
         </div>
-        <h1 class="mb-5">Статусы</h1>
+        <h1 class="mb-5">Задачи</h1>
     <div>
     @auth
-        <a href="{{ route('task_statuses.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-           Создать статус            
+        <a href="{{ route('task_statuses.destroy') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+           Создать задачу            
         </a>
     @endauth
     </div>
@@ -19,26 +19,25 @@
             <tr>
                 <th>ID</th>
                 <th>Имя</th>
-                <th>Дата создания</th>
                 @auth
                 <th>Действия</th>
                 @endauth
             </tr>
         </thead>
-        @foreach ($taskStatuses as $status)
+        @foreach ($tasks as $task)
         <tr class="border-b border-dashed text-left">
-            <td>{{ $status->id }}</td>
-            <td>{{ $status->name }}</td>
-            <td>{{ $status->created_at->format('Y-m-d') }}</td>
+            <td>{{ $task->id }}</td>
+            <td>{{ $task->status->name }}</td>
+            <td>{{ $task->description }}</td>
             @auth
             <td>
             <a data-confirm="Вы уверены?"
                data-method="delete"
                class="text-red-600 hover:text-red-900"
-               href="{{route('task_statuses.destroy', ['task_status'=>$status->id])}}"
+               href="{{ route('tasks.destroy', ['task'=>$task->id]) }}"
                rel="nofollow">
             Удалить                        </a>
-            <a class="text-blue-600 hover:text-blue-900" href="{{route('task_statuses.edit', ['task_status'=>$status->id])}}">
+            <a class="text-blue-600 hover:text-blue-900" href="{{ route('tasks.edit', ['task'=>$task->id])}}">
                 Изменить                        </a>
             </td>
             @endauth
