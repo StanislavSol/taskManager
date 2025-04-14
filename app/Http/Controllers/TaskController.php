@@ -18,9 +18,6 @@ class TaskController extends Controller
         $tasks = Task::paginate();
         $taskStatuses = new TaskStatus();
         $users = new User();
-        foreach ($tasks as $task) {
-            var_dump($task);
-        }
         return view('tasks.index', compact('tasks', 'taskStatuses', 'users'));
     }
 
@@ -48,10 +45,10 @@ class TaskController extends Controller
             'assigned_by_id' => 'nullable|string'
 
         ]);
+        var_dump($data);
         $task = new Task();
         $task->fill($data);
         $task->creator_by_id = Auth::user()->id;
-        var_dump($task);
         $task->save();
 
         flash('Задача успешно создана');
