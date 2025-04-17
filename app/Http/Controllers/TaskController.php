@@ -58,14 +58,11 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Task $task)
     {
-        $task = Task::findOrFail($id);
-        $taskName = $task->name;
-        $taskDescription = $task->description;
-        $taskStatus = TaskStatus::findOrFail($id)->name;
+        $taskStatus = TaskStatus::findOrFail($task->status_id)->name;
 
-        return view('tasks.show', compact('taskName', 'taskDescription', 'taskStatus'));
+        return view('tasks.show', compact('task', 'taskStatus'));
     }
 
     /**
