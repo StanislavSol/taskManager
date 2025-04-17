@@ -47,7 +47,7 @@ class LabelController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Labels $labels)
+    public function show(Label $label)
     {
         //
     }
@@ -63,11 +63,11 @@ class LabelController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Labels $labels)
+    public function update(Request $request, Label $label)
     {
         $data = $request->validate([
-            'name' => "required|unique:labels,name,{$labels->id}",
-            'description' => "max:1000'"
+            'name' => "required|unique:labels,name,{$label->id}",
+            'description' => "max:1000"
         ]);
         $label->fill($data);
         $label->save();
