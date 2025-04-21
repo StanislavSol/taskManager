@@ -6,6 +6,7 @@ use App\Models\Label;
 use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
+use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,6 +18,9 @@ class TaskController extends Controller
     public function index()
     {
         $tasks = Task::paginate();
+        $tasks = QueryBuilder::for(Task::class)
+            ->allowedFields(['status_id', 'creator_by_id', 'assigned_by_id'])
+            ->get();
         $taskStatuses = new TaskStatus();
         $users = new User();
         return view('tasks.index', compact('tasks', 'taskStatuses', 'users'));
@@ -86,9 +90,8 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Task $task)
     {
-        $task = Task::findOrFail($id);
         $data = $request->validate([
             'name' => "required|unique:tasks,name,{$task->id}",
             'description' => "max:1000",

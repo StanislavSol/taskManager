@@ -2,7 +2,7 @@
 @section('content')
     <div class="grid col-span-full">
         <h1 class="mb-5">Изменение задачи</h1>
-        <form class="w-50" method="POST" action="{{ route('tasks.update', $task) }}">
+        <form class="w-50" method="POST" action="{{ route('tasks.update', $task->id) }}">
         @csrf @method('PUT')
         <div class="flex flex-col">
             <div>
@@ -57,7 +57,7 @@
         <div>
              <select class="rounded border-gray-300 w-1/3 h-32" name="labels[]" id="labels[]" multiple>
              @foreach ($labels->all() as $label)
-                 <option value="{{ $label->id }}" {{ $task->labels->findOrFail($label->id) ? 'selected' : '' }}>{{ $label->name }}</option>
+                 <option value="{{ $label->id }}" {{ $task->labels->find($label->id) ? 'selected' : '' }}>{{ $label->name }}</option>
              @endforeach
              </select>
         </div>
