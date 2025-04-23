@@ -17,21 +17,22 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $tasks = Task::paginate();
         $data = $request->validate([
             'filter' => "nullable|array"
         ]);
-        $status_id = $data['filter']['status_id'] ?? null;
-        $created_by_id = $data['filter']['created_by_id'] ?? null;
-        $assigned_to_id = $data['filter']['assigned_to_id'] ?? null;
 
-        $filterTasks = QueryBuilder::for(Task::where(function ($query) use ($status_id, $created_by_id) {
-            $query->where('status_id', $status_id)
-                  ->orWhere('created_by_id', $created_by_id);
-        })->orWhere('assigned_to_id', $assigned_to_id))->paginate();
+        $filterTasks = QueryBuilder::for(Task::class);
 
-        var_dump($filterTasks->all());
-        $tasks = $filterTasks;
+        if (!empty($data['filter'])) {
+            foreach ($data['filter'] as $key => $value) {
+                if (!is_null($value)) {
+                    $filterTasks = $filterTasks->where($key, $value);
+                }
+            }
+        }
+
+
+        $tasks = $filterTasks->paginate();
         
         $taskStatuses = new TaskStatus();
         $users = new User();

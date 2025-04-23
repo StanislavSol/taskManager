@@ -11,19 +11,19 @@
                         <select class="rounded border-gray-300" name="filter[status_id]" id="filter[status_id]">
                             <option value selected="selected">Статус</option>
                         @foreach ($taskStatuses->all() as $status)
-                            <option value="{{ $status->id }}">{{ $status->name }}</option>
+                            <option value="{{ $status->id }}" {{ $status->id == old('status_id') ? 'selected' : '' }}>{{ $status->name }}</option>
                         @endforeach
                         </select>
 
 
-                        <select class="rounded border-gray-300" name="filter[created_by_id]" id="filter[created_by_id]">
+                        <select class="rounded border-gray-300" name="filter[creator_by_id]" id="filter[creator_by_id]">
                             <option value selected="selected">Автор</option>
                         @foreach ($users->all() as $user)
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                         @endforeach
                         </select>
 
-                       <select class="rounded border-gray-300" name="filter[assigned_to_id]" id="filter[assigned_to_id_id]">
+                       <select class="rounded border-gray-300" name="filter[assigned_by_id]" id="filter[assigned_by_id]">
                            <option value selected="selected">Исполнитель</option>
                         @foreach ($users->all() as $user)
                            <option value="{{ $user->id }}">{{ $user->name }}</option>
