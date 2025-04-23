@@ -4,33 +4,43 @@
     <div class="grid col-span-full">
         @include('flash::message')
         <h1 class="mb-5">Задачи</h1>
-        <div>
+        <div class="w-full flex items-center">
+            <div>
+                <form method="GET" action="{{ route('tasks.index') }}">
+                    <div class="flex">
+                        <select class="rounded border-gray-300" name="filter[status_id]" id="filter[status_id]">
+                            <option value selected="selected">Статус</option>
+                        @foreach ($taskStatuses->all() as $status)
+                            <option value="{{ $status->id }}">{{ $status->name }}</option>
+                        @endforeach
+                        </select>
+
+
+                        <select class="rounded border-gray-300" name="filter[created_by_id]" id="filter[created_by_id]">
+                            <option value selected="selected">Автор</option>
+                        @foreach ($users->all() as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        @endforeach
+                        </select>
+
+                       <select class="rounded border-gray-300" name="filter[assigned_to_id]" id="filter[assigned_to_id_id]">
+                           <option value selected="selected">Исполнитель</option>
+                        @foreach ($users->all() as $user)
+                           <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        @endforeach
+                        </select>
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2" type="submit">Применить</button>
+                    </div>
+                 </form>
+                </div>
+        </div>
+        <div class="ml-auto">
         @auth
             <a href="{{ route('tasks.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                Создать задачу            
             </a>
-        @endauth
-    </div>
-    
-
-    <div class="w-full flex items-center">
-        <div>
-            <form method="GET" action="https://php-task-manager-ru.hexlet.app/tasks">
-            <div class="flex">
-                <select class="rounded border-gray-300" name="filter[status_id]" id="filter[status_id]"><option value selected="selected">Статус</option><option value="1">новая</option>
-
-
-                <select class="rounded border-gray-300" name="filter[created_by_id]" id="filter[created_by_id]"><option value selected="selected">Автор</option><option value="1">Бирюкова София Максимовна</option></select>
-
-                <select class="rounded border-gray-300" name="filter[assigned_to_id]" id="filter[assigned_to_id]"><option value selected="selected">Исполнитель</option><option value="1"></select>                
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2" type="submit">Применить</button>
-                </form>
-            </div>
+            @endauth
         </div>
-
-        <div class="ml-auto">
-                    </div>
-    </div>
 
 
     <table class="mt-4">
