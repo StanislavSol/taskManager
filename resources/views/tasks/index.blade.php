@@ -11,7 +11,7 @@
                         <select class="rounded border-gray-300" name="filter[status_id]" id="filter[status_id]">
                             <option value selected="selected">Статус</option>
                         @foreach ($taskStatuses->all() as $status)
-                            <option value="{{ $status->id }}" {{ $status->id == old('status_id') ? 'selected' : '' }}>{{ $status->name }}</option>
+                            <option value="{{ $status->id }}" {{ $status->id == $filter['status_id'] ? 'selected' : '' }}>{{ $status->name }}</option>
                         @endforeach
                         </select>
 
@@ -19,27 +19,27 @@
                         <select class="rounded border-gray-300" name="filter[creator_by_id]" id="filter[creator_by_id]">
                             <option value selected="selected">Автор</option>
                         @foreach ($users->all() as $user)
-                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            <option value="{{ $user->id }}" {{ $user->id == $filter['creator_by_id'] ? 'selected' : '' }}>{{ $user->name }}</option>
                         @endforeach
                         </select>
 
                        <select class="rounded border-gray-300" name="filter[assigned_by_id]" id="filter[assigned_by_id]">
                            <option value selected="selected">Исполнитель</option>
                         @foreach ($users->all() as $user)
-                           <option value="{{ $user->id }}">{{ $user->name }}</option>
+                           <option value="{{ $user->id }}" {{ $user->id == $filter['assigned_by_id'] ? 'selected' : '' }}>{{ $user->name }}</option>
                         @endforeach
                         </select>
                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2" type="submit">Применить</button>
                     </div>
                  </form>
                 </div>
-        </div>
-        <div class="ml-auto">
+         <div class="ml-auto">
         @auth
             <a href="{{ route('tasks.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-               Создать задачу            
+               Создать задачу
             </a>
             @endauth
+        </div>
         </div>
 
 

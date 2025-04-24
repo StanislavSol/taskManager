@@ -20,10 +20,18 @@ class TaskController extends Controller
         $data = $request->validate([
             'filter' => "nullable|array"
         ]);
+        $filter = [
+                'status_id' => null,
+                'creator_by_id' => null,
+                'assigned_by_id' => null
+            ];
 
         $filterTasks = QueryBuilder::for(Task::class);
 
         if (!empty($data['filter'])) {
+
+            $filter = $data['filter'];
+
             foreach ($data['filter'] as $key => $value) {
                 if (!is_null($value)) {
                     $filterTasks = $filterTasks->where($key, $value);
@@ -31,12 +39,11 @@ class TaskController extends Controller
             }
         }
 
-
         $tasks = $filterTasks->paginate();
-        
         $taskStatuses = new TaskStatus();
         $users = new User();
-        return view('tasks.index', compact('tasks', 'taskStatuses', 'users'));
+
+        return view('tasks.index', compact('tasks', 'taskStatuses', 'users', 'filter'));
     }
 
     /**
