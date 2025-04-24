@@ -39,7 +39,7 @@ class LabelController extends Controller
         $label = new Label();
         $label->fill($data);
         $label->save();
-        flash('Метка успешно создана')->success();
+        flash(__('controllers.label_create'))->success();
 
         return redirect()->route('labels.index');
     }
@@ -72,7 +72,7 @@ class LabelController extends Controller
         $label->fill($data);
         $label->save();
 
-        flash('Метка успешно изменена')->success();
+        flash(__('controllers.label_update'))->success();
         return redirect()->route('labels.index');
 
 
@@ -85,9 +85,9 @@ class LabelController extends Controller
     {
         try {
             $label->delete();
-            flash('Метка успешно удалена')->success();
+            flash(__('controllers.label_destroy'))->success();
         } catch(QueryException $qe) {
-            flash('Не удалось удалить метку')->error();
+            flash(__('controllers.label_statuses_destroy_failed'))->error();
         }
 
         return redirect()->route('labels.index');

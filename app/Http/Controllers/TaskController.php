@@ -80,7 +80,7 @@ class TaskController extends Controller
             $task->labels()->attach($data['labels']);
         }
 
-        flash('Задача успешно создана')->success();
+        flash(__('controllers.tasks_create'))->success();
 
         return redirect()->route('tasks.index');
     }
@@ -127,21 +127,20 @@ class TaskController extends Controller
         } else {
             $task->labels()->sync([]);
         }
-        flash(__('Task successfully changed'))->success();
+        flash(__('controllers.tasks_update'))->success();
         return redirect()->route('tasks.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Task $task)
     {
-        $task = Task::find($id);
         if (Auth::user()->id === $task->creator_by_id) {
             $task->delete();
-            flash('Задача успешно удалена')->success();
+            flash(__('controllers.tasks_destroy'))->success();
         } else {
-            flash('Не удалось удалить задачу')->error();
+            flash(__('controllers.tasks_destroy_failed'))->error();
         }
 
         return redirect()->route('tasks.index');

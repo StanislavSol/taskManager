@@ -40,7 +40,7 @@ class TaskStatusController extends Controller
         $taskStatus = new TaskStatus();
         $taskStatus->fill($data);
         $taskStatus->save();
-        flash('Статус успешно создан')->success();
+        flash(__('controllers.task_statuses_create'))->success();
 
         return redirect()->route('task_statuses.index');
     }
@@ -56,38 +56,35 @@ class TaskStatusController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(TaskStatus $taskStatus)
     {
-        $taskStatus = TaskStatus::findOrFail($id);
         return view('task_statuses.edit', compact('taskStatus'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, TaskStatus $taskStatus)
     {
-        $taskStatus = TaskStatus::findOrFail($id);
         $data = $request->validate([
             'name' => "required|unique:task_statuses,name,{$taskStatus->id}",
         ]);
         $taskStatus->fill($data);
         $taskStatus->save();
-        flash(__('Status successfully changed'))->success();
+        flash(__('controllers.task_statuses_update'))->success();
         return redirect()->route('task_statuses.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(TaskStatus $taskStatus)
     {
         try {
-            $taskStatus = TaskStatus::find($id);
             $taskStatus->delete();
-            flash('Статус успешно удален')->success();
+            flash(__('controllers.task_statuses_destroy'))->success();
         } catch (QueryException $qe) {
-            flash('Не удалось удалить статус')->error();
+            flash(__('controllers.task_statuses_destroy_failed'))->error();
         }
         return redirect()->route('task_statuses.index');
     }
