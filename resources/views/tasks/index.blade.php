@@ -71,10 +71,10 @@
                 <a data-confirm="{{ __('layout.table_delete_question') }}"
                    data-method="delete"
                    class="text-red-600 hover:text-red-900"
-                   href="{{ route('tasks.destroy', $task->id) }}"
+                   href="{{ route('tasks.destroy', $task) }}"
                    rel="nofollow">{{ __('layout.table_delete') }}</a>
             @endif
-            <a class="text-blue-600 hover:text-blue-900" href="{{ route('tasks.edit', $task->id) }}">
+            <a class="text-blue-600 hover:text-blue-900" href="{{ route('tasks.edit', $task) }}">
                 {{ __('layout.table_edit') }}</a>
             </td>
             @endauth
