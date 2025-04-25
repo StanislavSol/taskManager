@@ -33,7 +33,7 @@
                href="{{ route('task_statuses.destroy', $status->id) }}"
                rel="nofollow">{{ __('layout.table_delete') }}</a>
             <a class="text-blue-600 hover:text-blue-900" 
-               href="{{ route('task_statuses.edit', $status->id) }}">{{ __('layout.table_edit') }}</a>
+               href="{{ route('task_statuses.edit', $status) }}">{{ __('layout.table_edit') }}</a>
             </td>
             @endauth
         </tr>
