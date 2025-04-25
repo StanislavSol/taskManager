@@ -30,7 +30,7 @@
             <a data-confirm="{{ __('layout.table_delete_question') }}"
                data-method="delete"
                class="text-red-600 hover:text-red-900"
-               href="{{ route('task_statuses.destroy', $status->id) }}"
+               href="{{ route('task_statuses.destroy', $status) }}"
                rel="nofollow">{{ __('layout.table_delete') }}</a>
             <a class="text-blue-600 hover:text-blue-900" 
                href="{{ route('task_statuses.edit', $status) }}">{{ __('layout.table_edit') }}</a>
