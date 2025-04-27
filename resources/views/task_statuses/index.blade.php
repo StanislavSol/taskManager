@@ -32,6 +32,8 @@
                class="text-red-600 hover:text-red-900"
                href="{{ route('task_statuses.destroy', $status) }}"
                rel="nofollow">{{ __('layout.table_delete') }}</a>
+            @csrf
+            @method('DELETE')
             <a class="text-blue-600 hover:text-blue-900" 
                href="{{ route('task_statuses.edit', $status) }}">{{ __('layout.table_edit') }}</a>
             </td>
