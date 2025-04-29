@@ -15,5 +15,5 @@ Cистема управления задачами. Позволяет созд
 ```shell
 git clone git@github.com:AslanAV/php-project-57.git
 cd php-project-57
-make setup
+make install
 ```
