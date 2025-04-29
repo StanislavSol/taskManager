@@ -10,14 +10,6 @@ use App\Models\User;
 
 class LabelsTest extends TestCase
 {
-   // private $user;
-   // private $label;
-
-   // public function setUp(): void
-   // {
-    
-    //$this->user = ['One', true, 3, 10, 'cat', [], '', 10, false];
-   // }
     public function test_labels_screen_can_be_rendered(): void
     {
         $response = $this->get(route('labels.index'));
