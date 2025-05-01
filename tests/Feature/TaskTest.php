@@ -11,30 +11,6 @@ use App\Models\TaskStatus;
 
 class TaskTest extends TestCase
 {
-   /* private $status;
-    private $task;
-
-    public function setUp(): void
-    {
-        $user = User::factory()->create();
-
-        $response = $this->post(route('login'), [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-
-        $this->status = new TaskStatus();
-        $this->status->name = 'Тестовый статус';
-        $this->status->save();
-
-        $this->task = new Task();
-        $this->task->name = 'Тестовая задача';
-        $this->taks->status_id = $this->status->id;
-        $this->task->creator_by_id = $this->Auth::user()->id;
-        $this->task->save();
-
-    }*/
-    
     public function test_task_screen_can_be_rendered(): void
     {
         $response = $this->get(route('tasks.index'));
