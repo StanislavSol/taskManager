@@ -13,7 +13,7 @@ Cистема управления задачами. Позволяет созд
 ## Локальная установка проекта
 
 ```shell
-git clone git@github.com:AslanAV/php-project-57.git
+git@github.com:StanislavSol/taskManager.git
 cd php-project-57
 make install
 ```
