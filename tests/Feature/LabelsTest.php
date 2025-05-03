@@ -10,6 +10,19 @@ use App\Models\User;
 
 class LabelsTest extends TestCase
 {
+
+    use RefreshDatabase;
+    private $label;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->label = new Label();
+        $this->label->name = 'Тестовая метка';
+        $this->label->save();
+        $this->user = User::factory()->create();
+    }
+
     public function test_labels_screen_can_be_rendered(): void
     {
         $response = $this->get(route('labels.index'));
@@ -21,10 +34,8 @@ class LabelsTest extends TestCase
         $response = $this->get(route('labels.create'));
         $response->assertStatus(403);
 
-        $user = User::factory()->create();
-
         $response = $this->post(route('login'), [
-            'email' => $user->email,
+            'email' => $this->user->email,
             'password' => 'password',
         ]);
 
@@ -32,7 +43,7 @@ class LabelsTest extends TestCase
         $response->assertStatus(200);
 
         $response = $this->post(route('labels.store'), [
-            'name' => 'Тестовая метка',
+            'name' => 'Новая тестовая метка',
         ]);
         $response->assertStatus(302);
 
@@ -42,25 +53,19 @@ class LabelsTest extends TestCase
 
     public function test_edit_label(): void
     {
-        $label = new Label();
-        $label->name = 'Тестовая метка';
-        $label->save();
 
-
-        $response = $this->get(route('labels.edit', $label));
+        $response = $this->get(route('labels.edit', $this->label));
         $response->assertStatus(403);
 
-        $user = User::factory()->create();
-
         $response = $this->post(route('login'), [
-            'email' => $user->email,
+            'email' => $this->user->email,
             'password' => 'password',
         ]);
 
-        $response = $this->get(route('labels.edit', $label));
+        $response = $this->get(route('labels.edit', $this->label));
         $response->assertStatus(200);
 
-        $response = $this->patch(route('labels.update', $label), [
+        $response = $this->patch(route('labels.update', $this->label), [
             'name' => 'Измененная тестовая метка',
         ]);
         $response->assertStatus(302);
@@ -71,21 +76,15 @@ class LabelsTest extends TestCase
 
     public function test_delete_label(): void
     {
-        $label = new Label();
-        $label->name = 'Тестовая метка';
-        $label->save();
-
-        $response = $this->delete(route('labels.destroy', $label));
+        $response = $this->delete(route('labels.destroy', $this->label));
         $response->assertStatus(403);
 
-        $user = User::factory()->create();
-
         $response = $this->post(route('login'), [
-            'email' => $user->email,
+            'email' => $this->user->email,
             'password' => 'password',
         ]);
 
-        $response = $this->delete(route('labels.destroy', $label));
+        $response = $this->delete(route('labels.destroy', $this->label));
 
         $response->assertStatus(302);
 

@@ -11,6 +11,18 @@ use App\Models\TaskStatus;
 
 class TaskStatusesTest extends TestCase
 {
+    use RefreshDatabase;
+    private $status;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->status = new TaskStatus();
+        $this->status->name = 'Тестовый статус';
+        $this->status->save();
+        $this->user = User::factory()->create();
+    }
+
     public function test_task_statuses_screen_can_be_rendered(): void
     {
         $response = $this->get(route('task_statuses.index'));
@@ -22,10 +34,8 @@ class TaskStatusesTest extends TestCase
         $response = $this->get(route('task_statuses.create'));
         $response->assertStatus(403);
 
-        $user = User::factory()->create();
-
         $response = $this->post(route('login'), [
-            'email' => $user->email,
+            'email' => $this->user->email,
             'password' => 'password',
         ]);
 
@@ -33,7 +43,7 @@ class TaskStatusesTest extends TestCase
         $response->assertStatus(200);
 
         $response = $this->post(route('task_statuses.store'), [
-            'name' => 'Тестовый статус',
+            'name' => 'Новый тестовый статус',
         ]);
         $response->assertStatus(302);
 
@@ -43,25 +53,19 @@ class TaskStatusesTest extends TestCase
 
     public function test_edit_task_status(): void
     {
-        $status = new TaskStatus();
-        $status->name = 'Тестовый статус';
-        $status->save();
 
-
-        $response = $this->get(route('task_statuses.edit', $status));
+        $response = $this->get(route('task_statuses.edit', $this->status));
         $response->assertStatus(403);
 
-        $user = User::factory()->create();
-
         $response = $this->post(route('login'), [
-            'email' => $user->email,
+            'email' => $this->user->email,
             'password' => 'password',
         ]);
 
-        $response = $this->get(route('task_statuses.edit', $status));
+        $response = $this->get(route('task_statuses.edit', $this->status));
         $response->assertStatus(200);
 
-        $response = $this->patch(route('task_statuses.update', $status), [
+        $response = $this->patch(route('task_statuses.update', $this->status), [
             'name' => 'Измененная тестовая метка',
         ]);
         $response->assertStatus(302);
@@ -72,21 +76,16 @@ class TaskStatusesTest extends TestCase
 
     public function test_delete_task_status(): void
     {
-        $status = new TaskStatus();
-        $status->name = 'Тестовый статус';
-        $status->save();
 
-        $response = $this->delete(route('task_statuses.destroy', $status));
+        $response = $this->delete(route('task_statuses.destroy', $this->status));
         $response->assertStatus(403);
 
-        $user = User::factory()->create();
-
         $response = $this->post(route('login'), [
-            'email' => $user->email,
+            'email' => $this->user->email,
             'password' => 'password',
         ]);
 
-        $response = $this->delete(route('task_statuses.destroy', $status));
+        $response = $this->delete(route('task_statuses.destroy', $this->status));
 
         $response->assertStatus(302);
 

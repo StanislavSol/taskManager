@@ -14,6 +14,18 @@ Cистема управления задачами. Позволяет созд
 
 ```shell
 git@github.com:StanislavSol/taskManager.git
-cd php-project-57
+cd taskManager
 make install
 ```
+
+## Запуск приложения
+```shell
+make start
+```
+
+## Запуст тестов
+
+```shell
+make test
+```
+
