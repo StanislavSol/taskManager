@@ -1,53 +1,23 @@
-# Используем официальный образ PHP с FPM
-FROM php:8.2-fpm
+FROM php:8.2-cli
 
-# Установка системных зависимостей
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
     libpq-dev \
-    libzip-dev \
-    nginx \
-    supervisor \
-    nodejs \
-    npm \
-    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd zip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    libzip-dev
+RUN docker-php-ext-install pdo pdo_pgsql zip
 
-# Установка Composer
-RUN curl -sS https://getcomposer.org/installer | php -- \
-    --install-dir=/usr/local/bin --filename=composer
 
-# Установка зависимостей Node.js
-RUN npm install -g yarn
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && php -r "unlink('composer-setup.php');"
 
-# Рабочая директория
-WORKDIR /var/www/html
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash -
+RUN apt-get install -y nodejs
 
-# Копирование файлов
+WORKDIR /app
+
 COPY . .
+RUN composer install
+RUN npm ci
+RUN npm run build
 
-# Установка PHP зависимостей
-RUN composer install --optimize-autoloader --no-dev
-
-# Установка фронтенд зависимостей и сборка
-RUN npm install && npm run build
-
-# Копирование конфигураций
-COPY docker/nginx.conf /etc/nginx/sites-available/default
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Настройка прав
-RUN chown -R www-data:www-data \
-    /var/www/html/storage \
-    /var/www/html/bootstrap/cache
-
-# Объявление порта
-EXPOSE 80
-
-# Команда запуска
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["bash", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"]
