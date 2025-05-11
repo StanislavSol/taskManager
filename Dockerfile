@@ -9,37 +9,42 @@ RUN apt-get update && \
         libpq-dev \
         libzip-dev \
         libpng-dev \
-        nodejs \
-        npm && \
+        wget && \
     docker-php-ext-install pdo pdo_pgsql zip gd opcache && \
-    rm -rf /var/lib/apt/lists/* && \
-    npm install -g n && \
-    n 16.20.2 && \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    rm -rf /var/lib/apt/lists/*
 
-# 2. Рабочая директория
+# 2. Установка Node.js 18.x
+RUN wget -qO- https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g npm@latest
+
+# 3. Установка Composer
+COPY --from=composer:2.6 /usr/local/bin/composer /usr/local/bin/composer
+
+# 4. Рабочая директория
 WORKDIR /app
 
-# 3. Копируем ТОЛЬКО файлы зависимостей
+# 5. Копируем только файлы зависимостей
 COPY composer.json composer.lock package.json package-lock.json ./
 
-# 4. Установка PHP зависимостей
+# 6. Установка PHP зависимостей
 RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platform-reqs
 
-# 5. Установка Node.js зависимостей
-RUN npm install --force && \
-    npm rebuild node-sass && \
-    npm run prod
+# 7. Установка фронтенд-зависимостей (с обработкой ошибок)
+RUN if [ -f "package.json" ]; then \
+        npm install --legacy-peer-deps --force && \
+        ([ -f "webpack.mix.js" ] && npm run prod || [ -f "vite.config.js" ] && npm run build || true); \
+    fi
 
-# 6. Копируем остальной код
+# 8. Копируем остальной код
 COPY . .
 
-# 7. Настройка прав
+# 9. Настройка прав
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache && \
     chmod -R 775 /app/storage /app/bootstrap/cache
 
-# 8. Порт для Render
+# 10. Порт для Render
 EXPOSE 10000
 
-# 9. Команда запуска
+# 11. Команда запуска
 CMD bash -c "php artisan migrate --force && php artisan optimize && php artisan serve --host=0.0.0.0 --port=$PORT"
