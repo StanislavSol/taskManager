@@ -1,7 +1,7 @@
-# Базовый образ
+# Базовый образ PHP
 FROM php:8.2-fpm
 
-# 1. Установка системных зависимостей
+# 1. Установка системных зависимостей (в одной команде RUN)
 RUN apt-get update && \
     apt-get install -y \
         git \
@@ -14,12 +14,12 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # 2. Установка Node.js 18.x
-RUN wget -qO- https://deb.nodesource.com/setup_18.x | bash - && \
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs && \
     npm install -g npm@latest
 
-# 3. Установка Composer
-COPY --from=composer:2.6 /usr/local/bin/composer /usr/local/bin/composer
+# 3. Установка Composer (новый способ)
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # 4. Рабочая директория
 WORKDIR /app
@@ -32,8 +32,8 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platfo
 
 # 7. Установка фронтенд-зависимостей (с обработкой ошибок)
 RUN if [ -f "package.json" ]; then \
-        npm install --legacy-peer-deps --force && \
-        ([ -f "webpack.mix.js" ] && npm run prod || [ -f "vite.config.js" ] && npm run build || true); \
+        npm install --legacy-peer-deps --force; \
+        ([ -f "webpack.mix.js" ] && npm run prod || true); \
     fi
 
 # 8. Копируем остальной код
