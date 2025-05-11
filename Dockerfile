@@ -1,7 +1,7 @@
-# Базовый образ PHP
+# Базовый образ PHP с предустановленным Node.js
 FROM php:8.2-fpm
 
-# 1. Установка системных зависимостей (в одной команде RUN)
+# 1. Установка системных зависимостей
 RUN apt-get update && \
     apt-get install -y \
         git \
@@ -13,12 +13,14 @@ RUN apt-get update && \
     docker-php-ext-install pdo pdo_pgsql zip gd opcache && \
     rm -rf /var/lib/apt/lists/*
 
-# 2. Установка Node.js 18.x
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs && \
-    npm install -g npm@latest
+# 2. Установка Node.js 18.x (альтернативный способ)
+RUN wget https://nodejs.org/dist/v18.20.2/node-v18.20.2-linux-x64.tar.xz && \
+    tar -xJf node-v18.20.2-linux-x64.tar.xz -C /usr/local --strip-components=1 && \
+    rm node-v18.20.2-linux-x64.tar.xz && \
+    ln -s /usr/local/bin/node /usr/bin/node && \
+    ln -s /usr/local/bin/npm /usr/bin/npm
 
-# 3. Установка Composer (новый способ)
+# 3. Установка Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # 4. Рабочая директория
@@ -32,7 +34,7 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platfo
 
 # 7. Установка фронтенд-зависимостей (с обработкой ошибок)
 RUN if [ -f "package.json" ]; then \
-        npm install --legacy-peer-deps --force; \
+        npm install --legacy-peer-deps --force && \
         ([ -f "webpack.mix.js" ] && npm run prod || true); \
     fi
 
