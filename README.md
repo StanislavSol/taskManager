@@ -11,7 +11,7 @@ Cистема управления задачами. Позволяет созд
 ## Локальная установка проекта
 
 ```shell
-git@github.com:StanislavSol/taskManager.git
+git clone git@github.com:StanislavSol/taskManager.git
 cd taskManager
 make install
 ```
